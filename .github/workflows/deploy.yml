@@ -1,21 +1,32 @@
-name: Deploy Blazor WebAssembly to GitHub Pages
+name: Deploy Blazor App to GitHub Pages
 
 on:
   push:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-      - run: dotnet publish -c Release -o release
+          dotnet-version: 8.0.x
+
+      - name: Publish Blazor WebAssembly App
+        run: dotnet publish -c Release -o release
+        working-directory: BibleApp
+
+      - name: Change base href for GitHub Pages
+        run: sed -i 's|<base href="/"|<base href="/BibleApp/"|g' release/wwwroot/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./release/wwwroot
+          publish_dir: BibleApp/release/wwwroot
