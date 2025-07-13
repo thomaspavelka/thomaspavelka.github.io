@@ -24,7 +24,7 @@ jobs:
         working-directory: BibleApp
 
       - name: Change base href for GitHub Pages
-        run: sed -i 's|<base href="/"|<base href="/BibleApp/"|g' BibleApp/release/wwwroot/index.html
+        run: sed -i 's|<base href="/"|<base href="/"|g' BibleApp/release/wwwroot/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
